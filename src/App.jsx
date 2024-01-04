@@ -1,14 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
-import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [films, setFilms] = useState([]);
+
+  useEffect(() => {
+    getFilms();
+  }, []);
+
+  const getFilms = async () => {
+    const API_KEY = import.meta.env.VITE_API_KEY;
+    console.log("🚀 ~ file: App.jsx:16 ~ getFilms ~ API_KEY:", API_KEY);
+    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}`);
+    const data = await response.json();
+    console.log("🚀 ~ getFilms ~ data.results:", data.results);
+    setFilms(data.results);
+    console.log(data);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  };
 
   return (
     <>
       <div>
+        <h1>Vite + React</h1>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -16,14 +36,22 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+
+      <h1>Film List</h1>
+      <div className="film-grid">
+        {films.map((film, index) => (
+          <div key={film.id} id={`film-item-${index}`} className="film-container">
+            <div className="poster">
+              <img src={`https://image.tmdb.org/t/p/original${film.poster_path}`} alt={film.title} />
+            </div>
+            <div>
+              <div id={`film-title-${index}`}>{film.title}</div>
+              <div id={`film-vote-average-${index}`}>Vote Average: {film.vote_average}</div>
+              <div id={`film-release-date-${index}`}>Release Date: {formatDate(film.release_date)}</div>
+            </div>
+          </div>
+        ))}
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
     </>
   );
 }
