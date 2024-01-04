@@ -8,6 +8,9 @@ import viteLogo from "/vite.svg";
  * 3. Display the title, vote average, and release date for each film
  * 4. Display the film poster for each film
  * 5. Format the date into this format: "Jan 9th, 2024"
+ *
+ * MovieDB URL:
+ * `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}`
  */
 
 function App() {
@@ -18,9 +21,7 @@ function App() {
   }, []);
 
   const getFilms = async () => {
-    const API_KEY = import.meta.env.VITE_API_KEY;
-    console.log("🚀 ~ file: App.jsx:16 ~ getFilms ~ API_KEY:", API_KEY);
-    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}`);
+    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}`);
     const data = await response.json();
     console.log("🚀 ~ getFilms ~ data.results:", data.results);
     setFilms(data.results);
