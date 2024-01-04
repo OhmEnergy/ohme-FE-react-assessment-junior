@@ -2,6 +2,14 @@ import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
+/**
+ * 1. Fetch the list of films from the API
+ * 2. Display the list of films in the grid
+ * 3. Display the title, vote average, and release date for each film
+ * 4. Display the film poster for each film
+ * 5. Format the date into this format: "Jan 9th, 2024"
+ */
+
 function App() {
   const [films, setFilms] = useState([]);
 
@@ -28,7 +36,7 @@ function App() {
   return (
     <>
       <div>
-        <h1>Vite + React</h1>
+        <h1>Ohme Frontend React Assessment</h1>
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -37,7 +45,7 @@ function App() {
         </a>
       </div>
 
-      <h1>Film List</h1>
+      <h2>Film List</h2>
       <div className="film-grid">
         {films.map((film, index) => (
           <div key={film.id} id={`film-item-${index}`} className="film-container">
