@@ -7,7 +7,10 @@ import viteLogo from "/vite.svg";
  * 2. Display the list of films in the grid
  * 3. Display the title, vote average, and release date for each film
  * 4. Display the film poster for each film
- * 5. Format the date into this format: "Jan 9th, 2024"
+ * 5. Implement a loading state and error/no films state
+ * 6. Format the date into this format: "Jan 9th, 2024"
+ * 7. Add a search bar to filter the list of films by title
+ * 8. Allow the user to click on the film and navigate to the film's page
  *
  * MovieDB URL:
  * `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}`
@@ -15,6 +18,8 @@ import viteLogo from "/vite.svg";
 
 function App() {
   const [films, setFilms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     getFilms();
@@ -25,6 +30,7 @@ function App() {
     const data = await response.json();
     console.log("🚀 ~ getFilms ~ data.results:", data.results);
     setFilms(data.results);
+    setIsLoading(false);
     console.log(data);
   };
 
@@ -46,21 +52,37 @@ function App() {
         </a>
       </div>
 
-      <h2>Film List</h2>
-      <div className="film-grid">
-        {films.map((film, index) => (
-          <div key={film.id} id={`film-item-${index}`} className="film-container">
-            <div className="poster">
-              <img src={`https://image.tmdb.org/t/p/original${film.poster_path}`} alt={film.title} />
-            </div>
-            <div>
-              <div id={`film-title-${index}`}>{film.title}</div>
-              <div id={`film-vote-average-${index}`}>Vote Average: {film.vote_average}</div>
-              <div id={`film-release-date-${index}`}>Release Date: {formatDate(film.release_date)}</div>
-            </div>
+      <h2>Films</h2>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : !films.length ? (
+        <div>No Films</div>
+      ) : (
+        <div>
+          <input
+            type="text"
+            placeholder="Search films..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="film-grid">
+            {films
+              .filter((film) => film.title.toLowerCase().includes(searchTerm.toLowerCase()))
+              .map((film, index) => (
+                <div key={film.id} id={`film-item-${index}`} className="film-container">
+                  <div className="poster">
+                    <img src={`https://image.tmdb.org/t/p/original${film.poster_path}`} alt={film.title} />
+                  </div>
+                  <div>
+                    <div id={`film-title-${index}`}>{film.title}</div>
+                    <div id={`film-vote-average-${index}`}>Vote Average: {film.vote_average}</div>
+                    <div id={`film-release-date-${index}`}>Release Date: {formatDate(film.release_date)}</div>
+                  </div>
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </>
   );
 }
