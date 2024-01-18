@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { formatDate } from "../utils";
-
 /**
  * 1. Fetch the list of films from the API
  * 2. Display the list of films in the grid
@@ -17,55 +13,29 @@ import { formatDate } from "../utils";
  */
 
 function FilmList() {
-  const [films, setFilms] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  useEffect(() => {
-    getFilms();
-  }, []);
-
-  const getFilms = async () => {
-    const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_API_KEY}`);
-    const data = await response.json();
-    setFilms(data.results);
-    setIsLoading(false);
-  };
-
   return (
-    <>
-      <h2>Films</h2>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : !films.length ? (
-        <div>No Films</div>
-      ) : (
-        <div>
-          <input
-            type="text"
-            placeholder="Search films..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <div className="film-grid">
-            {films
-              .filter((film) => film.title.toLowerCase().includes(searchTerm.toLowerCase()))
-              .map((film, index) => (
-                <Link key={film.id} id={`film-item-${index}`} className="film-container" to={`/film/${film.id}`}>
-                  <div className="poster">
-                    <img src={`https://image.tmdb.org/t/p/original${film.poster_path}`} alt={film.title} />
-                  </div>
-                  <div>
-                    <div id={`film-title-${index}`}>{film.title}</div>
-                    <div id={`film-vote-average-${index}`}>Vote Average: {film.vote_average}</div>
-                    <div id={`film-release-date-${index}`}>Release Date: {formatDate(film.release_date)}</div>
-                  </div>
-                </Link>
-              ))}
+    <div>
+      {/* TODO - search input */}
+      <div className="film-grid">
+        {/* TODO - list of films */}
+        <div id='film-item-1' className="film-container">
+          <div className="poster">
+            <img id="film-poster-1" src='' alt='' />
+          </div>
+          <div>
+            <div id='film-title-1'>
+              {/* TODO - film title */}
+            </div>
+            <div id='film-vote-average-1'>
+              {/* TODO - vote average */}  
+            </div>
+            <div id='film-release-date-1'>
+              {/* TODO - film date (e.g. Jan 9th, 2024) */}  
+            </div>
           </div>
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 }
 
